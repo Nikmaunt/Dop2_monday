@@ -1,24 +1,50 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {Button} from "./Components/Button";
+
+
+type ShowType = {
+    userId: number,
+    id: number,
+    title:string,
+    completed:boolean
+}
 
 function App() {
+   const [show, setShow] = useState<ShowType[]>([])
+
+
+
+  const UseShowUp = () => {
+      // useEffect(()=> {
+          fetch('https://jsonplaceholder.typicode.com/todos/')
+              .then(response => response.json())
+              .then(json => setShow(json))
+      // }, [])
+  }
+
+     const cleanMe = () =>{
+       setShow([])
+     }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <Button name={'Show me'} callback={UseShowUp}/>
+       <Button name={'Clean'} callback={cleanMe}/>
+      <ul>
+          {show.map(el => {
+              return (
+                  <li key={el.id}>
+                   <span>{el.id}</span>
+                   <span>{el.title}</span>
+                   <span>{`${el.completed}`}</span>
+                  </li>
+              )
+          })}
+
+      </ul>
+
     </div>
   );
 }
